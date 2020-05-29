@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Edyoda Stories Page</title>
+        <link href="https://fonts.googleapis.com/css?family=Raleway:100,400,400i,600,900&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="{% static 'blog/css/base.css' %}">
+        {% block extra_head %}
+        {% endblock %}
+    </head>
+    <body>
+        <div id="top-bar">
+            <div class="logo-bar">
+                <div class="logo">EDYODA</div>
+                <p>Stories</p>
+            </div>
+        </div>
+        <div id="main">
+            {% block content %}
+            {% endblock %}                
+        </div>
+        <div id="bottom-bar">
+        </div>
+    </body>
+</html>
