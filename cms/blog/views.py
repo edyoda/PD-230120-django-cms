@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from blog.models import Post
-from blog.forms import ContactUsForm
+from blog.forms import ContactUsForm,RegisterForm
 # Create your views here.
 
 # def index(request):
@@ -39,6 +39,22 @@ def contact_us_form_view(request):
             return render(request,"blog/contact-us.html",context = {"form":form})
         
 
+
+def register_form_view(request):
+    # print(request.method)
+    # print(request.GET)
+    if request.method == "GET":
+        form = RegisterForm()
+        return render(request,"blog/register.html",context = {"form":form})
+    else:
+
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            print(form.cleaned_data)
+            return HttpResponse("Thank you for submitting the response")
+        else:
+            print(form.errors)
+            return render(request,"blog/register.html",context = {"form":form})
 
 
 
