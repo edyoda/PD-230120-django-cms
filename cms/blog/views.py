@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from blog.models import Post
-from blog.forms import ContactUsForm,RegisterForm
+from blog.forms import ContactUsForm,RegisterForm,PostForm
 # Create your views here.
 
 # def index(request):
@@ -56,6 +56,40 @@ def register_form_view(request):
             print(form.errors)
             return render(request,"blog/register.html",context = {"form":form})
 
+def post_form_view(request):
+    # print(request.method)
+    # print(request.GET)
+    print(request.FILES)
+    if request.method == "GET":
+        form = PostForm()
+        return render(request,"blog/post.html",context = {"form":form})
+    else:
+
+        form = PostForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Thank you for submitting the response")
+        else:
+            print(form.errors)
+            return render(request,"blog/post.html",context = {"form":form})
+
+def post_update_form_view(request,id):
+    # print(request.method)
+    # print(request.GET)
+    post = Post.objects.get(id = id)
+    
+    if request.method == "GET":
+        form = PostForm(instance = post)
+        return render(request,"blog/post.html",context = {"form":form})
+    else:
+
+        form = PostForm(request.POST,request.FILES,instance = post)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Thank you for submitting the response")
+        else:
+            print(form.errors)
+            return render(request,"blog/post.html",context = {"form":form})
 
 
 # blog 
@@ -65,3 +99,18 @@ def register_form_view(request):
 #                a.jpeg 
 
 # 127.0.0.1:8000/static/a.jpeg 
+
+
+# Post.objects.create(title = "",content = "")
+
+
+
+# def prinval(val1,val2,val3):
+
+
+
+# d = {"val1":10,"val2":20,"val3":30}
+# printval(**d)
+
+
+# cleaned_data => dict 
