@@ -1,7 +1,9 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from blog.models import Post
+from blog.models import Post,Category
 from blog.forms import ContactUsForm,RegisterForm,PostForm
+from django.views import View
+from django.views import generic
 # Create your views here.
 
 # def index(request):
@@ -10,6 +12,25 @@ from blog.forms import ContactUsForm,RegisterForm,PostForm
 def index(request):
     posts = Post.objects.all()
     return render(request,"blog/stories.html",context = {"posts":posts})
+
+class HomeView(View):
+
+    def get(self,request):
+        posts = Post.objects.all()
+        return render(request,"blog/stories.html",context = {"posts":posts})
+
+
+class PostListView(generic.ListView):
+    model = Post 
+    queryset = Post.objects.filter(status = "P")
+    context_object_name = 'posts'
+    template_name = "blog/stories.html"
+
+    def get_context_data(self,**kwargs):
+        context = super().get_context_data(**kwargs)
+        categories = Category.objects.all()
+        context['categories'] = categories
+        return context
 
 # def index2(request):
 #     return render(request,"temp.html")
@@ -21,6 +42,19 @@ def post_details(request,id):
     except:
         return HttpResponse("Welcome to my blog!!!")
 
+class PostView(View):
+    def get(self,request,id):
+        try:
+            post = Post.objects.get(id = id)
+            return render(request,"blog/blog-post.html",context = {"post":post})
+        except:
+            return HttpResponse("Welcome to my blog!!!")
+        
+class PostDetailView(generic.DetailView):
+    model = Post
+    queryset = Post.objects.filter(status = "P")
+    template_name = "blog/blog-post.html"
+    pk_url_kwarg = "id"
 
 def contact_us_form_view(request):
     # print(request.method)
@@ -72,6 +106,22 @@ def post_form_view(request):
         else:
             print(form.errors)
             return render(request,"blog/post.html",context = {"form":form})
+
+class PostCreateView(View):
+    def get(self,request):
+        form = PostForm()
+        return render(request,"blog/post.html",context = {"form":form})
+
+    def post(self,request):
+        form = PostForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponse("Thank you for submitting the response")
+        else:
+            print(form.errors)
+            return render(request,"blog/post.html",context = {"form":form})
+
+
 
 def post_update_form_view(request,id):
     # print(request.method)
