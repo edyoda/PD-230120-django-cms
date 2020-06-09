@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 # Create your models here.
 
@@ -65,10 +66,17 @@ class Post(models.Model):
     status = models.CharField(max_length=1,choices=statuses,default="D")
     category = models.ForeignKey(Category,on_delete=models.CASCADE,related_name="categories")
     image = models.ImageField(upload_to="blog/",blank = True)
+    slug = models.SlugField(unique= True,blank = True)
 
     def __str__(self):
         return self.title
 
+    def save(self,*args,**kwargs):
+
+        self.slug = slugify(self.title)
+        super().save(*args,**kwargs)
+
+# slugify(title) => slug => object 
 
 #Get all the objects:
 # Post.objects.all() => Queryset 

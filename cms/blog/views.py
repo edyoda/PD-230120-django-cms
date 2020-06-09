@@ -107,19 +107,30 @@ def post_form_view(request):
             print(form.errors)
             return render(request,"blog/post.html",context = {"form":form})
 
-class PostCreateView(View):
-    def get(self,request):
-        form = PostForm()
-        return render(request,"blog/post.html",context = {"form":form})
+# class PostCreateView(View):
+#     def get(self,request):
+#         form = PostForm()
+#         return render(request,"blog/post.html",context = {"form":form})
 
-    def post(self,request):
-        form = PostForm(request.POST,request.FILES)
-        if form.is_valid():
-            form.save()
-            return HttpResponse("Thank you for submitting the response")
-        else:
-            print(form.errors)
-            return render(request,"blog/post.html",context = {"form":form})
+#     def post(self,request):
+#         form = PostForm(request.POST,request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return HttpResponse("Thank you for submitting the response")
+#         else:
+#             print(form.errors)
+#             return render(request,"blog/post.html",context = {"form":form})
+
+
+
+class PostCreateView(generic.CreateView):
+    model = Post
+    fields = ['title','content','status','category','image']
+    template_name = "blog/post.html"
+    success_url = "/"
+
+
+
 
 
 
