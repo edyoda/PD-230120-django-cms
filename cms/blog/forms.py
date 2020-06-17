@@ -1,5 +1,7 @@
 from django import forms
 from blog.models import Category,Post
+from django.utils.text import slugify
+from django.core.exceptions import ObjectDoesNotExist
 class ContactUsForm(forms.Form):
     name = forms.CharField(max_length=100)
     email = forms.EmailField(required=False)
@@ -34,11 +36,27 @@ class RegisterForm(forms.Form):
 #     image = forms.ImageField(required=False)
 
 class PostForm(forms.ModelForm):
-    content = forms.CharField()
 
     class Meta:
         model = Post
         fields = ['title','content','status','category','image']
+
+    def clean_title(self):
+        print("Getting here *********************************************************")
+        title = self.cleaned_data.get('title')
+        slug = slugify(title)
+        try:
+            post_obj = Post.objects.get(slug = slug)
+            print(post_obj)
+            raise forms.ValidationError("Title already exists",code ="Invalid")
+        except ObjectDoesNotExist:
+            return title 
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        # print(image.__dict__)
+        return image
+
 
 
 # TinyMCE

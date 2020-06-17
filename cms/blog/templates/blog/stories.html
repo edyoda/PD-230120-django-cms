@@ -16,7 +16,7 @@
     <div id="card-holder">
         {% for post in posts %}
             <div class="card">
-                <a class="card-link" href="{% url 'post-detail' post.id %}">
+                <a class="card-link" href="{% url 'post-detail' post.slug %}">
                 
                 {% if post.image %}
                     <img src="{{ post.image.url }}" alt=""/>

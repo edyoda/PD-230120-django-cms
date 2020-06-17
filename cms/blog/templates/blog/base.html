@@ -14,6 +14,11 @@
             <div class="logo-bar">
                 <a href="{% url 'home' %}"><div class="logo">EDYODA</div></a>
                 <p>Stories</p>
+                {% if user.is_authenticated %}
+                    <span>Welcome {{ user.get_username }}</span>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a>
+                {% endif %}
             </div>
         </div>
         <div id="main">
